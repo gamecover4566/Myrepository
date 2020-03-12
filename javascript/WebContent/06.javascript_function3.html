@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	/*
+	1. function객체를 변수에대입(일급함수)
+	2. function객체를 파라메타데이타로사용
+	3. function객체를 반환
+	*/
+	function outer_function1() {
+		var outer_var = "outer data";
+		function inner_function1() {
+			var inner_var = "inner data";
+			document.write("inner1 -> outer_var " + outer_var + "<br>");
+			document.write("inner1 -> inner_var : " + inner_var + "<br>");
+		}
+		inner_function1();
+		
+		document.write("outer1 -> outer_var " + outer_var + "<br>");
+		document.write("outer1 -> inner_var : inner_var is not defined<br>");
+		return inner_function1;
+	}
+	
+	function outer_function2() {
+		var outer_var = "outer data";
+		return function() {
+			var inner_var = "inner data";
+			document.write("inner2 -> outer_var : " + outer_var + "<br>")
+			document.write("inner2 -> inner_var : " + inner_var + "<br>")
+		};
+	}
+	
+	function outer_function3(arg_var) {
+		var outer_var = "outer data";
+		return function() {
+			var inner_var = "inner data";
+			document.write("inner3 -> arg_var : " + arg_var + "<br>")
+			document.write("inner3 -> outer_var : " + outer_var + "<br>")
+			document.write("inner3 -> inner_var : " + inner_var + "<br>")
+		};
+	}
+	
+	function outer_function4(a, b) {
+		var c = a + b;
+		return function() {
+			var result = c;
+			document.write("inner4 -> a : " + a + "<br>")
+			document.write("inner4 -> b : " + b + "<br>")
+			document.write("inner4 -> c : " + c + "<br>")
+			document.write("inner4 -> result : " + result + "<br>")
+		};
+	}
+	
+	
+	
+</script>
+</head>
+<body>
+	<h1>javascript inner function, closure </h1><hr>
+	<script type="text/javascript">
+		var returnInnerFunc1Var = outer_function1();
+		document.write("-----------------반환 받은 inner_function1 실행----------------<br>")
+		returnInnerFunc1Var();
+		//document.write(returnInnerFunc1Var + "<br>");
+		
+		var returnInnerFunc2Var = outer_function2();
+		var returnInnerFunc3Var = outer_function3("인자");
+		var returnInnerFunc4Var = outer_function4(3, 6);
+		
+		returnInnerFunc2Var();
+		returnInnerFunc3Var();
+		returnInnerFunc4Var();
+		
+		
+		
+	</script>
+</body>
+</html>

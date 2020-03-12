@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var jsObject = {
+		'func1' : function() {
+			console.log(this);
+		}
+	};
+	
+	function add() {
+		console.log(this);
+	}
+	
+	function contextChange() {
+		console.log("context 객체 this -> " + this);
+	}
+	
+</script>
+</head>
+<body>
+<h1>javascript this 객체 참조 변수</h1><hr>
+<script type="text/javascript">
+	window.add();
+	add();
+	jsObject.func1();
+	contextChange();
+	contextChange.call(window);
+	contextChange.call(new Object());
+	contextChange.call(new Array());
+	contextChange.call(new Date());
+	contextChange.call("문자");
+	contextChange.apply();
+	contextChange.apply("문자열");
+	/*
+	메서드 호출하는 방법으로는 함수 뒤에 ()를 붙이는 것과,
+	call 그리고 apply하는 방법이 있습니다.
+	*/
+</script>
+</body>
+</html>
