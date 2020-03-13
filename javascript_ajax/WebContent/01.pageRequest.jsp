@@ -3,13 +3,17 @@
 <%
 	String id = request.getParameter("id");
 	System.out.println(id);
-	if(id == null) id = "";
 	String msg = "";
+	
+	if(id == null) id = "";
+	
 	if(id.startsWith("guard")){
 		msg = "유효한 아이디";
-	}else if(!id.equals("")){
+	}
+	else if(!id.equals("")){
 		msg = "유효하지 않은 아이디";
-	}else{
+	}
+	else{
 		msg = "";
 	}
 	
@@ -28,6 +32,7 @@
 		}
 		document.f.submit();
 	}
+	
 	window.onload = function(){
 		document.f.id.focus();
 		document.f.id.setSelectionRange(
