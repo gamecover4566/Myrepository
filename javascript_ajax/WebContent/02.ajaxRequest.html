@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var xhr = null;
+	function ajaxRequestIdCheck(){
+		var idStr = document.f.id.value;
+		if(idStr.length == 0 || idStr.trim() == "") {
+			document.getElementById("msg").innerHTML='';
+			document.getElementById("msg").style.color='black';
+			document.f.id.focus();
+			/*
+			현재 진행 중인 xhr의 요청을 모두 취소
+			*/
+			
+			return;
+		}
+	
+		/*
+		AJAX 요청 순서
+		*/
+		
+		
+		/*
+		1. XMLHttpRequest 객체 생성
+		*/
+		xhr = new XMLHttpRequest();
+		
+		/*
+		2. 요청 속성 설정 
+		*/
+		var method = 'GET';
+		var params = 'id=' + idStr;
+		var url = '02.ajaxRequest.jsp?' + params;
+		var async = true;
+		
+		xhr.open(method, url, async);
+		
+		/*
+		응답이 도착했을 때 실행되는 콜백 함수 등록
+		*/
+		xhr.onreadystatechange = responseCallBack;
+		
+		xhr.onabort = function() {
+			document.getElementById("msg").innerHTML = '';	
+		}		
+		
+		/*
+		3. 요청
+		*/
+		xhr.send(null);
+	}
+	/*
+	응답이 도착했을 때 실행되는 사용자 정의 콜백 함수
+	*/
+	function responseCallBack(){
+		/*
+		<< xhr.readyState >>
+		The state of the request. 
+		0 = unsent
+		1 = opened
+		2 = headers_received
+		3 = loading
+		4 = done
+		*/
+		
+		if(xhr.readyState == 4) {
+			var responseText = xhr.responseText;
+			if(responseText.trim() == 'Y') {
+				document.getElementById("msg").innerHTML = '사용 가능';				
+				document.getElementById("msg").style.color = 'blue';				
+			}
+			
+			if(responseText.trim() == 'N') {
+				document.getElementById("msg").innerHTML = '사용 불가';				
+				document.getElementById("msg").style.color = 'red';				
+			}
+		}
+		else {
+			//progress dialog
+			document.getElementById('msg').innerHTML = "<img width='15px' height='15px' src='loading.gif'>";
+		}
+		
+		
+	}
+</script>
+</head>
+<body>
+<h1>ajax 요청</h1><hr/>
+<form name="f" id="f" action="">
+	아이디:<input type="text" name="id" id="id" 
+			onkeyup="ajaxRequestIdCheck();">
+	<span id="msg"></span>
+</form>
+</body>
+</html>
