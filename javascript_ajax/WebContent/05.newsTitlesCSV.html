@@ -7,34 +7,111 @@
 	/*
 	1.tag selector
 	*/
+	h1 {
+		color: blue;
+		text-align: center;
+	}
+	
+	ul {
+		list-style: none;
+		padding-left: 0px;
+	}
 	
 	/*
 	2. class selector
 	*/
+	h1.titleBackClass{
+		background-color: yellow;
+	}
 	
 	/*
 	3.id selector
 	*/
+	#content {
+		display: block;
+		border: 1px solid black;
+		/*
+		border-width: 1px;
+		border-color: black;
+		border-style: solid;
+		*/
+		
+		background-color: silver;
+		width: 900px;
+		margin: 50px auto 50px auto;
+		/*
+		margin-top: 50px;
+		margin-right: 50px;
+		margin-bottom: 50px;
+		margin-left: 50px;
+		*/
+		
+		padding: 20px;
+		
+	}
 	
+	#newsDiv {
+		padding-left: 10%;
+		border: 1px solid blue;
+		font-size: 15pt;
+		background: green;
+	}
 	
 	
 </style>
 <script type="text/javascript" src="httpRequest.js"></script>
 <script type="text/javascript">
 	function showNewsDiv(){
+		document.getElementById("newsDiv").style.display = 'block';
+		
 	}
+	
 	function hideNewsDiv(){
+		document.getElementById("newsDiv").style.display = 'block';
 	}
 	
 	function requestNews(){
+		sendRequest('05.newsTitlesCSV.jsp', null, responseNews, 'GET');
 	}
 	
 	function responseNews(){
-		
+		if(xhr.readyState == 4) {
+			var newsCSV = xhr.responseText;
+			console.log(newsCSV);
+			/*
+			0#
+			1#title1,company1,date
+			2#title1,company1,date|title2,company2,date2
+			*/
+			
+			var newsCSVArray = newsCSV.split('#');
+			var newsCount = newsCSVArray[0];
+			
+			if(newsCount.trim() == '0') {
+				return ;
+			}
+			
+			var newsListArray = newsCSVArray[1].split('|');
+			var html = '<ul>';
+			for (var i = 0; i < newsListArray.length; i++) {
+				/*
+				title1,company1,date
+				*/
+				var newsArray = newsListArray[i].split(',');	
+				html += "<li>" + newsArray[0] + "[" + newsArray[1] + "(" + newsArray[2] + ")] CSV</li>"
+			}
+			html += '<ul>';
+			document.getElementById('newsDiv').innerHTML = html;
+			
+			
+		}
 	}
-	window.onload=function(){
-		
+	
+	window.onload = function(){
+		setInterval(requestNews, 2000);	
+		//hideNewsDiv();
 	};
+	
 </script>
 </head>
 <body>
