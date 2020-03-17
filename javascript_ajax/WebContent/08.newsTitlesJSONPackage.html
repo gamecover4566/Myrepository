@@ -41,7 +41,7 @@
 	}
 	
 </style>
-<script type="text/javascript" src="httpRequestConstructorFunction.js"></script>
+<script type="text/javascript" src="httpRequestConstructorFunctionPackage.js"></script>
 <script type="text/javascript">
 	function showNewsDiv() {
 		document.getElementById("newsDiv").style.display = 'block';
@@ -53,13 +53,15 @@
 	
 	function requestNews() {
 		//sendRequest('08.newsTitlesJSON.jsp', null, responseNews, 'GET');
-		var ajaxRequest = new AjaxRequest('08.newsTitlesJSON.jsp', null, responseNews, 'GET');
+		var ajaxRequest = new com.itwill.AjaxRequest('08.newsTitlesJSON.jsp', null, responseNews, 'GET');
 		ajaxRequest.sendRequest();
 	}
 	
+	/*
 	function responseNewsData(data) {
 		console.log(data);
 	}
+	*/
 	
 	function responseNews(xhr, msg) {
 		console.log("-> " + xhr + ", " + msg);

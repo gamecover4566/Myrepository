@@ -1,13 +1,15 @@
-function AjaxRequest(url,params,callback,method) {
+var com = {};
+com.itwill = {};
+com.itwill.AjaxRequest = function AjaxRequest(url,params,callback,method) {
 	this.xhr = null;
 	this.url = url;
 	this.params = params;
 	this.callback = callback;
 	this.method = method;
 	//this.sendRequest();
-}
+};
 
-AjaxRequest.prototype = {
+com.itwill.AjaxRequest.prototype = {
 	'getXMLHttpRequest':function() {
 		if(window.XMLHttpRequest) {
 			return new XMLHttpRequest();
@@ -31,12 +33,19 @@ AjaxRequest.prototype = {
 		
 		var ajaxRequest = this;
 		this.xhr.onreadystatechange = function() {
+			ajaxRequest.callback(this,"어렵다");
+		};
+		
+		/*
+		this.xhr.onreadystatechange = function() {
 			if(this.readyState == 4) {
 				var jsonObject = JSON.parse(this.responseText);
 			}
 			
-			ajaxRequest.callback(this, "어렵다");
+			ajaxRequest.callback(jsonObject);
 		};
+		*/
+		
 		this.xhr.open(httpMethod, httpUrl, true);
 		this.xhr.setRequestHeader(
 			'Content-Type', 'application/x-www-form-urlencoded');
