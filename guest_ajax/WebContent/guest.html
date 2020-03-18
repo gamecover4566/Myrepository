@@ -125,58 +125,61 @@ label.error {
 	/****************guest_detail[JSON] 콜백 함수******************/
 	function displayGuestDetailJSON(element) {
 		if(xhr.readyState == 4) {
-			var jsonStr = xhr.responseText;
-			var jsonArray = JSON.parse(jsonStr);
-			var divE = document.createElement('div');
-			divE.setAttribute('class', 'guest_detail');
-			divE.style.display = 'block';
+			if(xhr.status == 200) {
+				var jsonStr = xhr.responseText;
+				var jsonArray = JSON.parse(jsonStr);
+				var divE = document.createElement('div');
+				divE.setAttribute('class', 'guest_detail');
+				divE.style.display = 'block';
+				
+				var html = "";
+				
+				var jsonDate = jsonArray[0].guest_date;
+				var jsonName = jsonArray[0].guest_name;
+				var jsonEmail = jsonArray[0].guest_email;
+				var jsonHomepage = jsonArray[0].guest_homepage;
+				var jsonContent = jsonArray[0].guest_content;
 			
-			var html = "";
-			
-			var jsonDate = jsonArray[0].guest_date;
-			var jsonName = jsonArray[0].guest_name;
-			var jsonEmail = jsonArray[0].guest_email;
-			var jsonHomepage = jsonArray[0].guest_homepage;
-			var jsonContent = jsonArray[0].guest_content;
-		
-			html += "<div class='guest_date'>날짜 : " + jsonDate + "</div>";
-			html += "<div class='guest_name'>이름 : " + jsonName + "</div>";
-			html += "<div class='guest_email'>이메일 : " + jsonEmail + "</div>";
-			html += "<div class='guest_homepage'>홈페이지 : " + jsonHomepage + "</div>";
-			html += "<div class='guest_content'>내용 : " + jsonContent + "</div>";
-			
-			divE.innerHTML = html;
-			element.parentElement.appendChild(divE);
-			
+				html += "<div class='guest_date'>날짜 : " + jsonDate + "</div>";
+				html += "<div class='guest_name'>이름 : " + jsonName + "</div>";
+				html += "<div class='guest_email'>이메일 : " + jsonEmail + "</div>";
+				html += "<div class='guest_homepage'>홈페이지 : " + jsonHomepage + "</div>";
+				html += "<div class='guest_content'>내용 : " + jsonContent + "</div>";
+				
+				divE.innerHTML = html;
+				element.parentElement.appendChild(divE);
+			}
 		}
 	}
 	
 	/****************guest_detail[XML] 콜백 함수******************/
 	function displayGuestDetailXML(element) {
 		if(xhr.readyState == 4) {
-			var xmlDocument = xhr.responseXML;
-			var guestNodeList = xmlDocument.getElementsByTagName('guest');
-			var divE = document.createElement('div');
-			divE.setAttribute('class', 'guest_detail');
-			divE.style.display = 'block';
+			if(xhr.status == 200) {
+				var xmlDocument = xhr.responseXML;
+				var guestNodeList = xmlDocument.getElementsByTagName('guest');
+				var divE = document.createElement('div');
+				divE.setAttribute('class', 'guest_detail');
+				divE.style.display = 'block';
+				
+				
+				var html = "";
+				var guestE = guestNodeList.item(0);
+				var xmlDate = guestE.getElementsByTagName('guest_date').item(0).firstChild.nodeValue;
+				var xmlName = guestE.getElementsByTagName('guest_name').item(0).firstChild.nodeValue;
+				var xmlEmail = guestE.getElementsByTagName('guest_email').item(0).firstChild.nodeValue;
+				var xmlHomepage = guestE.getElementsByTagName('guest_homepage').item(0).firstChild.nodeValue;
+				var xmlContent = guestE.getElementsByTagName('guest_content').item(0).firstChild.nodeValue;
+				
+				html += "<div class='guest_date'>날짜 : " + xmlDate + "</div>";
+				html += "<div class='guest_name'>이름 : " + xmlName + "</div>";
+				html += "<div class='guest_email'>이메일 : " + xmlEmail + "</div>";
+				html += "<div class='guest_homepage'>홈페이지 : " + xmlHomepage + "</div>";
+				html += "<div class='guest_content'>내용 : " + xmlContent + "</div>";
 			
-			
-			var html = "";
-			var guestE = guestNodeList.item(0);
-			var xmlDate = guestE.getElementsByTagName('guest_date').item(0).firstChild.nodeValue;
-			var xmlName = guestE.getElementsByTagName('guest_name').item(0).firstChild.nodeValue;
-			var xmlEmail = guestE.getElementsByTagName('guest_email').item(0).firstChild.nodeValue;
-			var xmlHomepage = guestE.getElementsByTagName('guest_homepage').item(0).firstChild.nodeValue;
-			var xmlContent = guestE.getElementsByTagName('guest_content').item(0).firstChild.nodeValue;
-			
-			html += "<div class='guest_date'>날짜 : " + xmlDate + "</div>";
-			html += "<div class='guest_name'>이름 : " + xmlName + "</div>";
-			html += "<div class='guest_email'>이메일 : " + xmlEmail + "</div>";
-			html += "<div class='guest_homepage'>홈페이지 : " + xmlHomepage + "</div>";
-			html += "<div class='guest_content'>내용 : " + xmlContent + "</div>";
-		
-			divE.innerHTML = html;
-			element.parentElement.appendChild(divE);
+				divE.innerHTML = html;
+				element.parentElement.appendChild(divE);				
+			}
 		}
 	}
 
