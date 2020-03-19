@@ -51,47 +51,53 @@ label.error {
 	/****************guest_list[JSON] 콜백 함수******************/
 	function displayGuestListJSON() {
 		if(xhr.readyState == 4) {
-			var jsonStr = xhr.responseText;
-			var jsonArray = JSON.parse(jsonStr);
-
-			var html = "";
-			for (var i = 0; i < jsonArray.length; i++) {
-				var jsonNo = jsonArray[i].guest_no;
-				var jsonTitle = jsonArray[i].guest_title;
-				
-				html += "<div class='guest_item'>";
-				html += "<h3 class='guest_title' guest_no='" + jsonNo + "'><a href=''>" + jsonTitle + "[JSON]</a></h3>";
-				html += "</div>";
+			if(xhr.status == 200) {
+				var jsonStr = xhr.responseText;
+				var jsonArray = JSON.parse(jsonStr);
+	
+				var html = "";
+				for (var i = 0; i < jsonArray.length; i++) {
+					var jsonNo = jsonArray[i].guest_no;
+					var jsonTitle = jsonArray[i].guest_title;
+					
+					html += "<div class='guest_item'>";
+					html += "<h3 class='guest_title' guest_no='" + jsonNo + "'><a href=''>" + jsonTitle + "[JSON]</a></h3>";
+					html += "</div>";
+					
+				}
+				document.getElementById('guest_list').innerHTML = html;
+				/*
+				<div class="guest_item">
+					<h3 class="guest_title"  guest_no="<%=guest.getGuest_no()%>"><a href=""><%=guest.getGuest_title()+"[HTML]"%></a></h3>
+				</div>
+				*/
+				showLoadingDialog(false);
 				
 			}
-			document.getElementById('guest_list').innerHTML = html;
-			/*
-			<div class="guest_item">
-				<h3 class="guest_title"  guest_no="<%=guest.getGuest_no()%>"><a href=""><%=guest.getGuest_title()+"[HTML]"%></a></h3>
-			</div>
-			*/
-			showLoadingDialog(false);
 		}
 	}
 	
 	/****************guest_list[XML] 콜백 함수******************/
 	function displayGuestListXML() {
 		if(xhr.readyState == 4) {
-			var xmlDocument = xhr.responseXML;
-			var guestNodeList = xmlDocument.getElementsByTagName('guest');
-			
-			var html = "";
-			for (var i = 0; i < guestNodeList.length; i++) {
-				var guestE = guestNodeList.item(i);
-				var xmlNo = guestE.getElementsByTagName('guest_no').item(0).firstChild.nodeValue;
-				var xmlTitle = guestE.getElementsByTagName('guest_title').item(0).firstChild.nodeValue;
+			if(xhr.status == 200) {
+				var xmlDocument = xhr.responseXML;
+				var guestNodeList = xmlDocument.getElementsByTagName('guest');
 				
-				html += "<div class='guest_item'>";
-				html += "<h3 class='guest_title' guest_no='" + xmlNo + "'><a href=''>" + xmlTitle + "[XML]</a></h3>";
-				html += "</div>";
+				var html = "";
+				for (var i = 0; i < guestNodeList.length; i++) {
+					var guestE = guestNodeList.item(i);
+					var xmlNo = guestE.getElementsByTagName('guest_no').item(0).firstChild.nodeValue;
+					var xmlTitle = guestE.getElementsByTagName('guest_title').item(0).firstChild.nodeValue;
+					
+					html += "<div class='guest_item'>";
+					html += "<h3 class='guest_title' guest_no='" + xmlNo + "'><a href=''>" + xmlTitle + "[XML]</a></h3>";
+					html += "</div>";
+				}
+				document.getElementById('guest_list').innerHTML = html;
+				showLoadingDialog(false);
+				
 			}
-			document.getElementById('guest_list').innerHTML = html;
-			showLoadingDialog(false);
 		}
 	}
 	
@@ -116,6 +122,13 @@ label.error {
 				var divE = document.createElement('div');
 				divE.setAttribute('class', 'guest_detail');
 				divE.style.display = 'block';
+				/*************삭제수정UI추가***********/
+				htmlData += "<div class='guest_delete' style='display: block;'>";
+				var guest_no = element.getAttribute('guest_no');
+				htmlData += "<input type='button' value='삭제' guest_no='" + guest_no + "'>";
+				htmlData += "<input type='button' value='수정' guest_no='" + guest_no + "'>";
+				htmlData += "</div>";
+				/**************************************/
 				divE.innerHTML = htmlData;
 				element.parentElement.appendChild(divE);
 			}
@@ -184,6 +197,7 @@ label.error {
 	}
 
 	/****************guest_insert_action[text] 콜백 함수******************/
+
 	function displayGuestInertAction() {
 		if(xhr.readyState == 4) {
 			if(xhr.status == 200) {
@@ -203,41 +217,130 @@ label.error {
 			}
 			
 		}
+	}	
+	
+	/****************guest_logout_action[text] 콜백 함수******************/
+	function displayGuestLogoutAction() {
+		if(xhr.readyState == 4) {
+			if(xhr.status == 200) {
+				//로그아웃
+				//login from show
+				document.getElementById('guest_login_form').style.display = 'block';
+				//logout from hide
+				document.getElementById('guest_logout_form').style.display = 'none';
+				document.getElementById('idSpan').innerHTML = '';
+				
+			}
+		}
 	}
 	
-	function login_check(){
+	
+	/****************guest_login_action[text] 콜백 함수*******************/
+	function displayGuestLoginAction(){
+		if(xhr.readyState == 4) {
+			if(xhr.status == 200) {
+				var loginResultTest = xhr.responseText;
+				
+				if(loginResultTest.trim() == 'success') {
+					//로그인 성공
+					//login from hide
+					document.getElementById('guest_login_form').style.display = 'none';
+					document.getElementById('idSpan').innerHTML 
+					= document.getElementById('guest_login_form').guest_id.value;
+					//logout from show
+					document.getElementById('guest_logout_form').style.display = 'block';
+					document.getElementById('guest_login_form').reset();
+					
+				}
+				else {
+					//로그인 실패
+					document.querySelector('#guest_login_form').guest_id.select();
+					document.querySelector('#msg').innerHTML = '아이디와 패스워드를 확인하세요';
+					document.querySelector('#msg').style.color = 'darkred';
+					
+				}
+				
+			}
+		}
+	}
+	
+	function login_check() {
+		var jsonObject = null;
+		sendRequest('guest/guest_session_check.jsp', null, function() {
+			if(xhr.readyState == 4) {
+				//로그인 체크 결과 도착
+				jsonResult = JSON.parse(xhr.responseText);
+				
+			}
+		}, 'POST', false);
 		
+		return jsonResult;
 	}
 	
 	/*%%%%%%%%%%%%%%%%%%%%%%%메뉴 UI이벤트 처리%%%%%%%%%%%%%%%%%%%%%%%*/
 	window.onload = loading_ui_event;
 		
 	function loading_ui_event() {
-		/*****************guest_list[HTML] 이벤트******************/
-		document.getElementById("menu-a").getElementsByTagName('a')
-		.item(0).addEventListener('click', function(e) {
-			sendRequest('guest/guest_list_html.jsp', null, displayGuestListHTML, 'GET', true);
-			showLoadingDialog(true);
-			e.preventDefault();
-		});		
+		var loginResultJson = login_check();
+		console.log(loginResultJson);
+		if(loginResultJson.status.trim() == 'success') {
+			//logout form show
+			document.getElementById('guest_logout_form').style.display = 'block';
+			document.getElementById('idSpan').innerHTML = loginResultJson.login_id;
+			//login form hide
+			document.getElementById('guest_login_form').style.display='none';
+		}
+		else
+		{
+			//login form show
+			document.getElementById('guest_login_form')
+				.style.display='block';
+			document.getElementById('guest_login_form').reset();
+			//logout form hide
+			document.getElementById('guest_logout_form').style.display = 'none';
+			document.getElementById('idSpan').innerHTML = '';
+		}
 		
-		/*****************guest_list[JSON] 이벤트******************/
-		document.getElementById("menu-b").getElementsByTagName('a')
-		.item(0).addEventListener('click', function(e) {
-			sendRequest('guest/guest_list_json.jsp', null, displayGuestListJSON, 'GET', true);
-			showLoadingDialog(true);
-			e.preventDefault();
-		});
-		
-		/*****************guest_list[XML] 이벤트*******************/
-		document.getElementById("menu-c").getElementsByTagName('a')
-		.item(0).addEventListener('click', function(e) {
-			sendRequest('guest/guest_list_xml.jsp', null, displayGuestListXML, 'GET', true);
-			showLoadingDialog(true);
-			e.preventDefault();
-		});
-		
-		/*****************guest_logout 이벤트[a]*******************/	
+		if(loginResultJson.status.trim() == 'success') {		
+			/*****************guest_list[HTML] 이벤트******************/
+			document.getElementById("menu-a").getElementsByTagName('a')
+			.item(0).addEventListener('click', function(e) {
+				sendRequest('guest/guest_list_html.jsp', null, displayGuestListHTML, 'GET', true);
+				showLoadingDialog(true);
+				e.preventDefault();
+			});
+			
+			/*****************guest_list[JSON] 이벤트******************/
+			document.getElementById("menu-b").getElementsByTagName('a')
+			.item(0).addEventListener('click', function(e) {
+				sendRequest('guest/guest_list_json.jsp', null, displayGuestListJSON, 'GET', true);
+				showLoadingDialog(true);
+				e.preventDefault();
+			});
+			
+			/*****************guest_list[XML] 이벤트*******************/
+			document.getElementById("menu-c").getElementsByTagName('a')
+			.item(0).addEventListener('click', function(e) {
+				sendRequest('guest/guest_list_xml.jsp', null, displayGuestListXML, 'GET', true);
+				showLoadingDialog(true);
+				e.preventDefault();
+			});
+			
+			/*****************guest_logout 이벤트[a]*******************/
+			document.querySelector('#guest_logout_a').addEventListener('click', function() {
+					//ajax 요청
+					sendRequest('guest/guest_logout_action.jsp', null, displayGuestLogoutAction, 'GET', true);
+				});
+		}
+		else {
+			var menuNodeList = document.querySelectorAll('#menu-a a, #menu-b a, #menu-c a, #guest_logout_a a');
+			for (var i = 0; i < menuNodeList.length; i++) {
+				menuNodeList.item(i).addEventListener('click', function(e) {
+					alert("로그인 하세요");
+					e.preventDefault();
+				});
+			}
+		}
 		/*************guest_insert_form[HTML] 이벤트***************/
 		document.getElementById("menu-d").getElementsByTagName('a')
 		.item(0).addEventListener('click', function(e) {
@@ -247,10 +350,27 @@ label.error {
 		});
 		
 		/*************guest_login_form 이벤트[submit]**************/	
-		/*
-		var guest_write_formE = document.getElementById('guest_write_form');
-		console.log("-> " + guest_write_formE);
-		*/
+		document.getElementById('guest_login_form')
+		.addEventListener('submit', function(e) {
+			var guest_login_formE = e.target;
+			var guest_idStr = guest_login_formE.guest_id.value;
+			var guest_passStr = guest_login_formE.guest_pass.value;
+			if(guest_idStr == '' || guest_passStr == '') {
+				guest_login_formE.guest_id.focus();
+				document.getElementById('msg').innerHTML
+					='아이디와 패스워드를 입력하세요';
+				document.getElementById('msg').style.color = 'darkred';
+				e.preventDefault();
+				
+				return ;
+			}
+			//ajax login 요청
+			var params = 'guest_id=' + guest_idStr + "&guest_pass=" + guest_passStr;
+			sendRequest('guest/guest_login_action.jsp',	params, displayGuestLoginAction, 'POST', true);
+						
+			e.preventDefault();
+			
+		});
 		
 	}
 	
