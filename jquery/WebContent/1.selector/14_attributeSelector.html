@@ -4,11 +4,28 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>속성 선택자를 이용한 HTML Element 검색</title>
 <style>
+a {
+  text-decoration:none;	
+}
+
+a:link {
+	color: cornflowerblue;
+}
+
+a:hover {
+	color: orchid;
+}
+
+a:visited {
+	color: crimson;
+}
+
 div {
 	background: #FFF;
 	padding: 10px;
 	margin: 10px;
 }
+
 </style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
@@ -16,15 +33,19 @@ div {
 		/*
 		 a tag target 속성이 존재하는엘레멘트 
 		*/
+		$('a[target]').css('border', '1px solid green');
 		
 		/*
 		 a tag href 속성의값이 http://www.slqer.com 인 엘레멘트 
 		*/
+		$("a[href='http://www.slqer.com']").css('background', 'orange');
 		
 		/*
 		 a tag href 속성의값이 http://www.slqer.com 와 일치하지않는 엘레멘트 
 		*/
+		$("a[href!='http://www.slqer.com']").css('background', 'pink');
 		
+		$("a[href ^= 'http://']").css('background', 'black');
 		
 	});
 </script>
@@ -36,8 +57,8 @@ div {
 		<a href="http://www.slqer.com" target="_blank">SQLER.COM (Target)</a><br/>
 		<a href="http://www.hoons.kr">Hoons.NET (No Target)</a><br />
 		<a href="http://www.hoons.kr" target="_blank">Hoons.NET (Target)</a><br/>
-		<a href="http://www.hows.kr">HowsNET (No Target)</a><br/>
-		<a href="http://www.hows.kr" target="_blank">HowsNET (No Target)</a><br/>
+		<a href="https://www.naver.com">naver (No Target)</a><br/>
+		<a href="https://www.naver.com" target="_blank">naver (Target)</a><br/>
 	</div>
 </body>
 </html>

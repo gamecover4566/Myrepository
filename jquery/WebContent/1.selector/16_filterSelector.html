@@ -22,8 +22,17 @@ td {
 </style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-	$(function(){
+	$(function() {
+		$('tr:eq(0)').css('background', 'palegreen');
+		$('td:eq(39)').css('background', 'hotpink');
 		
+		$('tr:eq(0) > td:eq(9)').css('background', 'PaleTurquoise');
+		$('tr:eq(1) > td:gt(2)').css('background', 'SandyBrown');
+		$('tr:eq(2) > td:odd').css('background', 'SlateBlue');
+		$('tr:eq(2) > td:even').css('background', 'tan');
+		
+		$('tr:eq(3) > td:first').css('background', 'plum');
+		$('tr:eq(3) > td:last').css('background', 'peru');
 		
 	});
 </script>

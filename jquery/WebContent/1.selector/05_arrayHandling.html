@@ -15,6 +15,17 @@
 				{'id':'guard4','name':'kim4','address':'경기파'},
 				{'id':'guard5','name':'kim5','address':'경기솔'}
 		];
+		$('h2').append('&nbsp;'+memberNameArray.length);
+		$('p').html(memberNameArray.join('<br>'));
+		$.each(memberNameArray, function(index, nameStr) {
+			$('#memberNameList').append('<li>' + nameStr + '</li>');
+		});
+		$.each(memberArray, function(index, memberObject) {
+			$('#memberList').append('<li>' + memberObject.id + ', '
+					+ memberObject.name + ', '
+					+ memberObject.address + '</li>');			
+		});
+		
 		
 	});
 	

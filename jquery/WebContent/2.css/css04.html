@@ -11,6 +11,7 @@ div,pre {
 }
 table {
 	border: 1px solid #AAA;
+	background-color: aquamarine;
 }
 
 td {
@@ -22,9 +23,16 @@ td {
 </style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-$(function(){
+$(function() {
 	
 	//position 
+	var position = $('div').position();
+	var width = $('div').width();
+	var height = $('div').height();
+	console.log('div top, left : ' + position.top + ", " + position.left);
+	console.log('div size : ' + width + ", " + height);
+	$('table').width(500);
+	console.log("table width : " + $('table').width());
 	
 	
 });	

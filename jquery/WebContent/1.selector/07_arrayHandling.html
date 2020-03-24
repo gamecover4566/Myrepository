@@ -11,6 +11,11 @@ $(function() {
 	/*
 	The .get() method grants us access to the DOM nodes underlying each jQuery object.
 	Suppose we had a simple unordered list on the page:
+	*/
+	var listElementArray = $('#nameList > li').get();
+	console.log(listElementArray[0]);
+	console.log(listElementArray[0].firstChild.nodeValue);
+	$('h2').text("members of Groups are " + listElementArray.length);
 	
 	/*
 	text()
@@ -20,6 +25,8 @@ $(function() {
 	text('string')
 	A string of text to set as the content of each matched element
 	*/
+	alert($('body').text());
+	alert($('body').html());
 	
 	
 });

@@ -28,8 +28,17 @@ td {
 </style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-$(function(){
-
+$(function() {
+	$('td').click(function(e) {
+		/*
+		alert('click target : ' + e.target);
+		alert('click this : ' + this);
+		alert('clock td $(e).text() : ' + $(e.target).text());
+		alert('clock td $(this).text() : ' + $(this).text());
+		*/
+		$(this).toggleClass('selected');
+		
+	});
 	
 	
 });
